@@ -1,0 +1,19 @@
+= ISE - Year 2, Block 3 Project
+:toc:
+:toclevels: 2
+
+== Overview
+This project is a joint effort between two modules:
+
+*   **Context of the Code**: link:https://learn.ul.ie/d2l/le/lessons/72222/units/1128737[Lecture Contents]
+*   **Mobile Application Development**: link:https://learn.ul.ie/d2l/le/lessons/72222/units/1128736[Lecture Contents]
+
+The original prescribed information about the project specification reference architecture can be viewed at: link:https://learn.ul.ie/d2l/le/lessons/72222/topics/1155285[Project Specification Reference Architecture]
+
+== Getting Started
+
+[//]: # (Add instructions here on how to set up and run the project)
+
+== Project Structure
+
+[//]: # (Describe the main directories and their contents)
