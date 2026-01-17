@@ -3,12 +3,23 @@
 :toclevels: 2
 
 == Overview
+=== Resources
 This project is a joint effort between two modules:
 
-*   **Context of the Code**: link:https://learn.ul.ie/d2l/le/lessons/72222/units/1128737[Lecture Contents]
-*   **Mobile Application Development**: link:https://learn.ul.ie/d2l/le/lessons/72222/units/1128736[Lecture Contents]
+[cols="1,1"]
+|===
+| Module | Lecture Contents
 
-The original prescribed information about the project specification reference architecture can be viewed at: link:https://learn.ul.ie/d2l/le/lessons/72222/topics/1155285[Project Specification Reference Architecture]
+| Context of the Code
+| link:https://learn.ul.ie/d2l/le/lessons/72222/units/1128737[Lecture Contents]
+
+| Mobile Application Development
+| link:https://learn.ul.ie/d2l/le/lessons/72222/units/1128736[Lecture Contents]
+|===
+
+
+- 160126: link:https://learn.ul.ie/d2l/le/lessons/72222/topics/1155285[Project Specification Reference Architecture]
+- 170126: link:https://www.notion.so/ise-y2-b3-project-2ebd3c352db0808cba36d812db65f04c?source=copy_link[Notion Page]
 
 == Getting Started
 
