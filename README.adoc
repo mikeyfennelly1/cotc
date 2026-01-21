@@ -19,14 +19,14 @@ This project is a joint effort between two modules:
 
 
 - 160126: link:https://learn.ul.ie/d2l/le/lessons/72222/topics/1155285[Project Specification Reference Architecture - SLIDE 37]
-- 170126: link:https://www.notion.so/ise-y2-b3-project-2ebd3c352db0808cba36d812db65f04c?source=copy_link[Notion Page]
+- 170126: link:https://www.notion.so/ise+--+y2+--+b3+--+project-2ebd3c352db0808cba36d812db65f04c?source=copy_link[Notion Page]
 
 == Getting Started
 This project utilizes Git submodules. To ensure all components are correctly initialized, clone the repository using:
 ----
 git clone --recurse-submodules git@github.com:mikeyfennelly1/ise--y2--b3--project.git
 ----
-If you have already cloned the repository without `--recurse-submodules`, you can initialize them by running:
+If you have already cloned the repository without `--recurse-submodul+--+es`, you can initialize them by running:
 ----
 git submodule update --init --recursive
 ----
@@ -36,6 +36,6 @@ image::./img/reference-architecture.png[Reference Architecture]
 
 The repository submodules are reflective of the architecture shown in the image. The uploader queue is preliminarily implemented using NATS. The submodules are as follows:
 
-* link:https://github.com/mikeyfennelly1/ise--y2--b3--project--collector[Collector Agent]: The `ise--y2--b3--project--collector` submodule corresponds to the `Collector Agent` in the diagram.
-* link:https://github.com/mikeyfennelly1/ise--y2--b3--project--desktop-sysinfo[Device 1]: The `ise--y2--b3--project--desktop-sysinfo` submodule corresponds to `Device 1` in the diagram.
-* link:https://github.com/mikeyfennelly1/ise--y2--b3--project--mobile-app[Mobile Data (Firebase)]: The `ise--y2--b3--project--mobile-app` submodule corresponds to `Mobile Data (Firebase)` in the diagram. Although the `Mobile Data (Firebase)` labelling in the provided reference architecture does not include the mobile app, the provided and corresponding `mobile-app` submodule accounts for both the android source code for the mobile app and any firebase related scripts/configurations.
+* link:https://github.com/mikeyfennelly1/ise--+y2+--+b3+--+project+--collector[Collector Agent]: The `ise-y2-b3-project-collector` submodule corresponds to the `Collector Agent` in the diagram.
+* link:https://github.com/mikeyfennelly1/ise--+y2+--+b3+--+project+--desktop-sysinfo[Device 1]: The `ise-y2-b3-project-desktop-sysinfo` submodule corresponds to `Device 1` in the diagram.
+* link:https://github.com/mikeyfennelly1/ise--+y2+--+b3+--+project+--mobile-app[Mobile Data (Firebase)]: The `ise-y2-b3-project-mobile-app` submodule corresponds to `Mobile Data (Firebase)` in the diagram. Although the `Mobile Data (Firebase)` labelling in the provided reference architecture does not include the mobile app, the provided and corresponding `mobile-app` submodule accounts for both the android source code for the mobile app and any firebase related scripts/configurations.
