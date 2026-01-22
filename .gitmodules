@@ -4,3 +4,6 @@
 [submodule "ise--y2--b3--project--mobile-app"]
 	path = ise--y2--b3--project--mobile-app
 	url = git@github.com:you/ise--y2--b3--project--mobile-app.git
+[submodule "ise--y2--b3--project--web-app"]
+	path = ise--y2--b3--project--web-app
+	url = git@github.com:you/ise--y2--b3--project--web-app.git
