@@ -1,11 +1,4 @@
-version: '3.8'
-services:
-  collector:
-    build: ./ise--y2--b3--project--collector
-    ports:
-      - "8080:8080"
-  uploader-queue:
-    image: nats:2.12.3-alpine3.22
-    container_name: uploader-queue
-    ports:
-      - "4222:4222"
+include:
+  - ./ise--y2--b3--project--web-app/docker-compose.yaml
+  - ./ise--y2--b3--project--collector/docker-compose.yaml
+  - ./ise--y2--b3--project--web-gui/docker-compose.yaml
