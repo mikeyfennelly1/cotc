@@ -7,3 +7,6 @@
 [submodule "ise--y2--b3--project--web-app"]
 	path = ise--y2--b3--project--web-app
 	url = git@github.com:you/ise--y2--b3--project--web-app.git
+[submodule "ise--y2--b3--project--web-gui"]
+	path = ise--y2--b3--project--web-gui
+	url = git@github.com:you/ise--y2--b3--project--web-gui.git
