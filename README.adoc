@@ -31,6 +31,21 @@ If you have already cloned the repository without `--recurse-submodules`, you ca
 git submodule update --init --recursive
 ----
 
+== Running the Application
+To run the application, you will need to have the directories installed. In future versions, the build process will include remote registries for automated deployments and releases.
+
+Once the directories are installed, navigate to the root of the project and run the following command to start the services using Docker Compose:
+----
+docker-compose up
+----
+
+To produce system information, navigate to the `ise--y2--b3--project--desktop-sysinfo` directory and run the Go application.
+----
+# Example command, actual command might vary based on the Go application's build/run process
+chmod +x ./ise--y2--b3--project--desktop-sysinfo/start.sh
+./ise--y2--b3--project--desktop-sysinfo/start.sh
+----
+
 == Project Structure
 image::./img/reference-architecture.png[Reference Architecture]
 
