@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.0.1] - 2026-01-25
+## [1.0.0] - 2026-01-25
 ### Added
 - `sysinfo-device` app produces to collector.
 - `collector` receives message and writes to NATS subject.
