@@ -5,7 +5,7 @@
 # The contents of this script should be copied and pasted
 # into the script where the following functionality is required.
 #
-# The purpose of this script (read_base_dir.sh) is to read
+# The purpose of this script (basedir.sh) is to read
 # the base directory of the script in use, and set that in
 # an environment variable, which is thereafter used as a point of
 # relative reference in the script.
