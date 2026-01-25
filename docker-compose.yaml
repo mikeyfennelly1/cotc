@@ -1,4 +1,5 @@
 include:
   - ./ise--y2--b3--project--web-app/docker-compose.yaml
   - ./ise--y2--b3--project--collector/docker-compose.yaml
+  - ./ise--y2--b3--project--collector/docker-compose-nats.yaml
   - ./ise--y2--b3--project--web-gui/docker-compose.yaml
