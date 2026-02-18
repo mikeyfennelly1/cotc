@@ -1,4 +1,4 @@
-# Ansible Playbook for deploying microservices to coruscant VM.
+# Ansible Playbook for deploying microservices to student-vm-10 VM.
 #
 # The purpose of this playbook is to enable us to do the equivalent of
 # a `helm apply` on our infrastructure, so that the version of application
@@ -8,33 +8,45 @@
 # Note that you must have permissions to SSH into the VM to be able
 # to execute this playbook.
 
-- name: Deploy Microservices
-  hosts: app_servers
+- name: Deploy system version
+  hosts: prod
+  gather_facts: no
   become: yes
 
-  tasks:
-    - name: Install Docker
-      apt:
-        name: docker.io
-        state: present
-        update_cache: yes
+  vars:
+    # release_version can be passed at runtime via --extra-vars
+    release_version: "main"
+    ansible_ssh_private_key_file: "/home/mfennelly/.ssh/ansible_github_pull_key"
 
+  tasks:
     - name: Ensure Docker is running
       service:
         name: docker
         state: started
         enabled: yes
 
-    - name: Pull latest collector image
-      docker_image:
-        name: mikeyfennelly1/your-image
-        source: pull
+    - name: Add GitHub to known_hosts
+      ansible.builtin.known_hosts:
+        name: github.com
+        key: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+        path: /home/mfennelly/.ssh/known_hosts
+        state: present
+      become: yes
+      become_user: mfennelly
 
-    - name: Run container
-      docker_container:
-        name: myapp
-        image: your-dockerhub-user/your-image
-        state: started
-        restart_policy: always
-        published_ports:
-          - "80:8080"
+    - name: Clone project system repository via SSH
+      ansible.builtin.git:
+        repo: git@github.com:mikeyfennelly1/ise--y2--b3--project.git
+        dest: /home/mfennelly/ise--y2--b3--project
+        depth: 1
+        recursive: no
+        key_file: /home/mfennelly/.ssh/ansible_github_pull_key
+      become: yes
+      become_user: mfennelly
+
+    - name: Deploy Docker Compose stack
+      community.docker.docker_compose_v2:
+        project_src: /home/mfennelly/ise--y2--b3--project
+        files:
+          - docker-compose-prod.yaml
+        state: present
