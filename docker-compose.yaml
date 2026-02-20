@@ -3,7 +3,16 @@ services:
     image: nats:2.12.3-alpine3.22
     container_name: uploader-queue
     ports:
-      - "${NATS_PORT}:4222"
+      - "${NATS_PORT}:4222" # Client connections
+      - "8222:8222"         # Monitoring port
+    command:
+      - nats-server
+      - -js
+      - -m
+      - "8222"
+      - -store_dir
+      - /data/jetstream
+      - -D
     environment:
       - NATS_PORT=${NATS_PORT}
     restart: unless-stopped
