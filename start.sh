@@ -39,22 +39,30 @@ if [ $? -ne 0 ]; then
   tmux new-session -d -s "$SESSION_NAME"
 fi
 
+# Enable pane titles
+tmux set-option -t "$SESSION_NAME" pane-border-status top
+tmux set-option -t "$SESSION_NAME" pane-border-format "#[fg=black,bg=cyan] #T #[default]"
+
 # Pane 0: sysinfo app
+tmux select-pane -t "$SESSION_NAME":0.0 -T "Desktop Sysinfo"
 tmux send-keys -t "$SESSION_NAME":0.0 \
   "pushd \"${BASEDIR}/${prefix}--desktop-sysinfo\" && chmod +x ./start.sh && ./start.sh; popd" C-m
 
 # Split horizontally for collector
 tmux split-window -h -t "$SESSION_NAME":0
+tmux select-pane -t "$SESSION_NAME":0.1 -T "Collector"
 tmux send-keys -t "$SESSION_NAME":0.1 \
   "pushd \"${BASEDIR}/${prefix}--collector\" && chmod +x ./start.sh && ./start.sh; popd" C-m
 
 # Split vertically for web-app
 tmux split-window -v -t "$SESSION_NAME":0.1
+tmux select-pane -t "$SESSION_NAME":0.2 -T "Web App"
 tmux send-keys -t "$SESSION_NAME":0.2 \
   "pushd \"${BASEDIR}/${prefix}--web-app\" && chmod +x ./start.sh && ./start.sh; popd" C-m
 
 # Split vertically for nats subscriber
 tmux split-window -v -t "$SESSION_NAME":0.2
+tmux select-pane -t "$SESSION_NAME":0.3 -T "NATS Subscriber"
 tmux send-keys -t "$SESSION_NAME":0.3 \
   "nats sub desktop-sysinfo" C-m
 
