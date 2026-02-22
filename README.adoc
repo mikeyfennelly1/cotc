@@ -36,3 +36,19 @@ Run the following command:
 chmod +x ./start.sh
 ./start.sh
 ----
+
+== Submodule Version Control & Releases
+Each project is packaged in a docker container, whose version is consistent with the release tag of the repository For example:
+
+|===
+| Codebase version for submodule | Corresponding docker image
+
+| `v1.0.2`
+| `mikeyfennelly/<image-name>:v1.0.2`
+|===
+
+There must be a 1:1 mapping of repository tag to docker image, where for each repository tag, the corresponding image is the true docker artifact for that source code.
+
+== Deployment management
+
+The configuration for our deployment on our VM is managed in the top-level repository.
