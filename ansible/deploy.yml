@@ -8,8 +8,8 @@
 # Note that you must have permissions to SSH into the VM to be able
 # to execute this playbook.
 
-- name: Deploy Microservices
-  hosts: app_servers
+- name: Deploy Applications to vm10
+  hosts: vm10
   become: yes
 
   tasks:
