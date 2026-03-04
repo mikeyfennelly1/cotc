@@ -30,3 +30,17 @@ services:
      - db
     ports:
       - "${WEB_APP_PORT}:8080"
+
+  api-gateway:
+    image: nginx:1.28-alpine3.23
+    volumes:
+      - ./nginx.conf:/etc/nginx/templates/default.conf.template
+    environment:
+      # Restrict substitution to only these vars so nginx's own $host, $remote_addr, etc. are left intact
+      NGINX_ENVSUBST_TEMPLATE_VARS: "NGINX_SERVER_NAME NGINX_PORT NGINX_SERVER_NAME UPSTREAM_HOST UPSTREAM_PORT"
+      NGINX_PORT: "${NGINX_PORT}"
+      NGINX_SERVER_NAME: "${NGINX_SERVER_NAME}"
+      UPSTREAM_HOST: "${UPSTREAM_HOST}"
+      UPSTREAM_PORT: "${UPSTREAM_PORT}"
+    ports:
+      - "${NGINX_PORT}:${NGINX_PORT}"
