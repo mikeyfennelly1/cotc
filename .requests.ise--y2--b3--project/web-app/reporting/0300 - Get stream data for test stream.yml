@@ -1,0 +1,15 @@
+info:
+  name: 0300 - Get stream data for test stream
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: "{{web-app}}/api/reporting/streams/3"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

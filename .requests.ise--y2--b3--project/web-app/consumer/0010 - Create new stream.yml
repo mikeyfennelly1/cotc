@@ -1,0 +1,22 @@
+info:
+  name: 0010 - Create new stream
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{web-app}}/api/consumer/streams"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "test",
+        "parent": null
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

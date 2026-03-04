@@ -1,0 +1,15 @@
+info:
+  name: 0010 - Get streams
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{web-app}}/api/consumer/streams"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
