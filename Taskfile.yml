@@ -3,6 +3,13 @@
 version: '3'
 
 tasks:
+  docker:release:dev:
+    desc: Build all container artifacts and release dev timestamp images
+    cmds:
+      - ./ise--y2--b3--project--collector/scripts/docker-build.sh
+      - ./ise--y2--b3--project--web-app/scripts/docker-build.sh
+    silent: false
+
   build:
     desc: Build all services on the host and stage JARs for Docker
     cmds:
