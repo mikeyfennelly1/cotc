@@ -1,7 +1,7 @@
 info:
   name: 0300 - Get stream data for test stream
   type: http
-  seq: 3
+  seq: 2
 
 http:
   method: GET

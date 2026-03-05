@@ -17,7 +17,7 @@ config:
 request:
   variables:
     - name: web-app
-      value: http://localhost:8082
+      value: http://localhost:8080
 bundled: false
 extensions:
   bruno:
