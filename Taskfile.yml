@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  build:
+    desc: Build all services on the host and stage JARs for Docker
+    cmds:
+      - cd ise--y2--b3--project--collector && ./gradlew build --no-daemon && cp build/libs/b3proj-0.0.1-SNAPSHOT.jar app.jar
+      - cd ise--y2--b3--project--web-app && ./gradlew build --no-daemon && cp build/libs/ise--y2--b3--project--web-app-0.0.1-SNAPSHOT.jar app.jar
+    silent: false
+
+  nginx:
+    desc: Start nginx
+    cmds:
+      - chmod +x ./scripts/nginx.sh
+      - sudo ./scripts/nginx.sh start
+    silent: true
+  top:
+    desc: See dashboard of durable consumers to the JetStream queue.
+    cmds:
+      - nats-top
+    silent: true
