@@ -34,10 +34,11 @@ services:
       - data
 
   collector:
-    image: mikeyfennelly/ise-y2-b3-project-collector:dev
+    image: mikeyfennelly/ise-y2-b3-project-collector:dev-20260305162116
     environment:
       NATS_HOST: nats
       NATS_PORT: "${NATS_PORT}"
+      COLLECTOR_LISTEN_PORT: 8080
     ports:
       - "${COLLECTOR_LISTEN_PORT}:8080"
     depends_on:
@@ -47,7 +48,7 @@ services:
       - messaging
 
   web-app:
-    image: mikeyfennelly/ise-y2-b3-project-web-app:dev-20260305143920
+    image: mikeyfennelly/ise-y2-b3-project-web-app:dev-20260305161554
     depends_on:
       db:
         condition: service_healthy
@@ -59,6 +60,7 @@ services:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      WEB_APP_PORT: 8080
       NATS_HOST: nats
       NATS_PORT: "${NATS_PORT}"
     ports:
@@ -71,16 +73,17 @@ services:
   api-gateway:
     image: nginx:1.28-alpine3.23
     volumes:
-      - ./nginx.conf:/etc/nginx/templates/default.conf.template
+      - ./nginx.docker.conf:/etc/nginx/templates/default.conf.template
+    depends_on:
+      - web-app
+      - collector
     environment:
       # Restrict substitution to only these vars so nginx's own $host, $remote_addr, etc. are left intact
-      NGINX_ENVSUBST_TEMPLATE_VARS: "NGINX_PORT NGINX_SERVER_NAME UPSTREAM_HOST WEB_APP_PORT COLLECTOR_LISTEN_PORT"
+      NGINX_ENVSUBST_TEMPLATE_VARS: "NGINX_PORT NGINX_SERVER_NAME"
       NGINX_PORT: "${NGINX_PORT}"
       NGINX_SERVER_NAME: "${NGINX_SERVER_NAME}"
-      UPSTREAM_HOST: "${UPSTREAM_HOST}"
-      WEB_APP_PORT: "${WEB_APP_PORT}"
-      COLLECTOR_LISTEN_PORT: "${COLLECTOR_LISTEN_PORT}"
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
     networks:
       - frontend
+      - messaging
