@@ -16,7 +16,7 @@ config:
 
 request:
   variables:
-    - name: web-app
+    - name: nginx
       value: http://localhost:8080
 bundled: false
 extensions:

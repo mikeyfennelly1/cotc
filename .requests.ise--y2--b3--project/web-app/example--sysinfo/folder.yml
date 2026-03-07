@@ -1,7 +1,0 @@
-info:
-  name: example--sysinfo
-  type: folder
-  seq: 3
-
-request:
-  auth: inherit

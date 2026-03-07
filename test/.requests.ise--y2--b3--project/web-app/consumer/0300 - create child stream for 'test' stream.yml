@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: "{{web-app}}/api/consumer/streams"
+  url: "{{nginx}}/api/consumer/streams"
   body:
     type: json
     data: |-

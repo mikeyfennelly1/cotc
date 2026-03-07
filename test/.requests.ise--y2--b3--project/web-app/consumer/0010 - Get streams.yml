@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{web-app}}/api/consumer/streams"
+  url: "{{nginx}}/api/consumer/streams"
   auth: inherit
 
 settings:
