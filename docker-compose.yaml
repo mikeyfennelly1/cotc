@@ -34,7 +34,7 @@ services:
       - data
 
   collector:
-    image: mikeyfennelly/ise-y2-b3-project-collector:dev-20260305162116
+    image: mikeyfennelly/ise-y2-b3-project-collector:latest
     environment:
       NATS_HOST: nats
       NATS_PORT: "${NATS_PORT}"
@@ -48,7 +48,7 @@ services:
       - messaging
 
   web-app:
-    image: mikeyfennelly/ise-y2-b3-project-web-app:dev-20260305161554
+    image: mikeyfennelly/ise-y2-b3-project-web-app:latest
     depends_on:
       db:
         condition: service_healthy
