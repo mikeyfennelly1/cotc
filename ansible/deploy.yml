@@ -11,9 +11,16 @@
 - name: Deploy Applications to vm10
   hosts: vm10
   become: yes
+  vars_files:
+    - vars/app_values.yml
 
   tasks:
-    - name: Install Docker
+    - name: Remove conflicting containerd.io
+      apt:
+        name: containerd.io
+        state: absent
+
+    - name: Install docker.io
       apt:
         name: docker.io
         state: present
@@ -25,16 +32,27 @@
         state: started
         enabled: yes
 
-    - name: Pull latest collector image
-      docker_image:
-        name: mikeyfennelly1/your-image
-        source: pull
+    - name: Pull parent repo
+      ansible.builtin.git:
+        repo: "{{ repo_ssh_url }}"
+        dest: "{{ repo_pull_dest }}"
+        version: "main"
+        accept_hostkey: yes
+        recursive: no
+      environment:
+        GIT_SSH_COMMAND: "ssh -i {{ gh_pull_key_file }} -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
 
-    - name: Run container
-      docker_container:
-        name: myapp
-        image: your-dockerhub-user/your-image
-        state: started
-        restart_policy: always
-        published_ports:
-          - "80:8080"
+    - name: Stop old containers
+      community.docker.docker_compose_v2:
+        project_src: "{{ repo_pull_dest }}"
+        state: absent
+
+    - name: Pull latest images
+      community.docker.docker_compose_v2:
+        project_src: "{{ repo_pull_dest }}"
+        pull: always
+
+    - name: Start stack
+      community.docker.docker_compose_v2:
+        project_src: "{{ repo_pull_dest }}"
+        state: present
