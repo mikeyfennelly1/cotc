@@ -45,34 +45,24 @@ fi
 tmux set-option -t "$SESSION_NAME" pane-border-status top
 tmux set-option -t "$SESSION_NAME" pane-border-format "#{?pane_active,#[bg=green fg=black],#[bg=colour238 fg=white]} #{pane_title} #[default]"
 
-# Pane 0: sysinfo app
-tmux select-pane -t "$SESSION_NAME":0.0 -T "sysinfo"
-tmux send-keys -t "$SESSION_NAME":0.0 \
-  "pushd \"${BASEDIR}/${prefix}--desktop-sysinfo\" && chmod +x ./start.sh && exec -a sysinfo bash ./start.sh" C-m
+start_service() {
+  local pane="$SESSION_NAME":0.$1
+  local title="$2"
+  local dir="${BASEDIR}/${prefix}--$3"
+  tmux select-pane -t "$pane" -T "$title"
+  tmux send-keys -t "$pane" "pushd \"$dir\" && chmod +x ./start.sh && bash ./start.sh" C-m
+}
 
-# Split horizontally for collector
 tmux split-window -h -t "$SESSION_NAME":0
-tmux select-pane -t "$SESSION_NAME":0.1 -T "collector"
-tmux send-keys -t "$SESSION_NAME":0.1 \
-  "pushd \"${BASEDIR}/${prefix}--collector\" && chmod +x ./start.sh && exec -a collector bash ./start.sh" C-m
+start_service 1 "collector" "collector"
 
-# Split vertically for web-app
 tmux split-window -v -t "$SESSION_NAME":0.1
-tmux select-pane -t "$SESSION_NAME":0.2 -T "web-app"
-tmux send-keys -t "$SESSION_NAME":0.2 \
-  "pushd \"${BASEDIR}/${prefix}--web-app\" && chmod +x ./start.sh && exec -a web-app bash ./start.sh" C-m
+start_service 2 "web-app" "web-app"
 
-# Split vertically for web-gui
 tmux split-window -v -t "$SESSION_NAME":0.2
-tmux select-pane -t "$SESSION_NAME":0.3 -T "web-gui"
-tmux send-keys -t "$SESSION_NAME":0.3 \
-  "pushd \"${BASEDIR}/${prefix}--web-gui\" && chmod +x ./start.sh && exec -a web-gui bash ./start.sh" C-m
+start_service 3 "web-gui" "web-gui"
 
-# Split vertically for nats subscriber
-tmux split-window -v -t "$SESSION_NAME":0.3
-tmux select-pane -t "$SESSION_NAME":0.4 -T "nats-sub"
-tmux send-keys -t "$SESSION_NAME":0.4 \
-  "exec -a nats-sub nats sub desktop-sysinfo" C-m
+start_service 0 "sysinfo" "desktop-sysinfo"
 
 # Optional: evenly size panes
 tmux select-layout -t "$SESSION_NAME":0 tiled
