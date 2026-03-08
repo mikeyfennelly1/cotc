@@ -1,0 +1,40 @@
+# Ansible Playbook for deploying microservices to coruscant VM.
+#
+# The purpose of this playbook is to enable us to do the equivalent of
+# a `helm apply` on our infrastructure, so that the version of application
+# images can develop asymmetrically, and application releases not be coupled
+# to deployments.
+#
+# Note that you must have permissions to SSH into the VM to be able
+# to execute this playbook.
+
+- name: Deploy Applications to vm10
+  hosts: vm10
+  become: yes
+
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull latest collector image
+      docker_image:
+        name: mikeyfennelly1/your-image
+        source: pull
+
+    - name: Run container
+      docker_container:
+        name: myapp
+        image: your-dockerhub-user/your-image
+        state: started
+        restart_policy: always
+        published_ports:
+          - "80:8080"
