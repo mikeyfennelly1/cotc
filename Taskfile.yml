@@ -21,13 +21,13 @@ tasks:
   deploy:latest:
     desc: Deploy the latest configuration for the application.
     cmds:
-      - ansible-playbook ansible/deploy.yml -i ansible/inventory.ini
+      - ansible-playbook ansible/deploy.yml -i ansible/inventory.ini --vault-password-file ./.vault_pass
     silent: false
 
   deploy:latest:verbose:
     desc: Deploy the latest configuration for the application in verbose mode.
     cmds:
-      - ansible-playbook ansible/deploy.yml -i ansible/inventory.ini -vvv
+      - ansible-playbook ansible/deploy.yml -i ansible/inventory.ini -vvv --vault-password-file ./.vault_pass
     silent: false
 
 
