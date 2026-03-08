@@ -6,6 +6,7 @@ tasks:
   docker:release:dev:
     desc: Build all container artifacts and release dev timestamp images
     cmds:
+      - ./libb3project/build.sh
       - ./ise--y2--b3--project--collector/scripts/docker-build.sh
       - ./ise--y2--b3--project--web-app/scripts/docker-build.sh
     silent: false
