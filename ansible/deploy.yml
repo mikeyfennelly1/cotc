@@ -13,6 +13,7 @@
   become: yes
   vars_files:
     - vars/app_values.yml
+    - vars/secrets.yml
 
   tasks:
     - name: Remove conflicting containerd.io
@@ -41,6 +42,22 @@
         recursive: no
       environment:
         GIT_SSH_COMMAND: "ssh -i {{ gh_pull_key_file }} -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+
+    - name: Write .env file
+      ansible.builtin.copy:
+        dest: "{{ repo_pull_dest }}/.env"
+        content: |
+          NGINX_PORT={{ nginx_port }}
+          NGINX_SERVER_NAME={{ nginx_server_name }}
+          NATS_PORT={{ nats_port }}
+          COLLECTOR_LISTEN_PORT={{ collector_listen_port }}
+          COLLECTOR_LOG_LEVEL={{ collector_log_level }}
+          WEB_APP_PORT={{ web_app_port }}
+          POSTGRES_PASSWORD={{ postgres_password }}
+          POSTGRES_USER={{ postgres_user }}
+          POSTGRES_DB={{ postgres_db }}
+          POSTGRES_PORT={{ postgres_port }}
+          POSTGRES_HOST=db
 
     - name: Stop old containers
       community.docker.docker_compose_v2:
