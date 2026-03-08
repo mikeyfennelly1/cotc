@@ -12,7 +12,7 @@ else
 fi
 cd "${BASEDIR}"
 
-source "${BASEDIR}"/.env
+source "${BASEDIR}"/.env.local
 source "${BASEDIR}"/scripts/helpers.sh
 
 prefix="ise--y2--b3--project"
@@ -20,11 +20,14 @@ prefix="ise--y2--b3--project"
 ################################################
 # START NATS & POSTGRES
 ################################################
-# start NATS and Postgres
 echo "starting NATS"
-docker compose up nats -d
+var_must_exist NATS_PORT
+docker compose -f docker-compose.local.yaml up nats -d --wait
+echo "NATS is healthy"
 echo "starting Postgres"
-docker compose up db -d
+var_must_exist POSTGRES_PASSWORD POSTGRES_USER POSTGRES_DB POSTGRES_PORT
+docker compose -f docker-compose.local.yaml up db -d --wait
+echo "Postgres is healthy"
 
 ################################################
 # START SERVICE SESSIONS
