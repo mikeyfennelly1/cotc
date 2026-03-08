@@ -4,3 +4,4 @@
 .env
 nginx-local.conf
 .env.local
+.vault_pass
