@@ -1,0 +1,15 @@
+info:
+  name: 0100 - Get Health
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{collector}}/api/collector/health"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

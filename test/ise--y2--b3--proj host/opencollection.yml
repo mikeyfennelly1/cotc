@@ -1,0 +1,30 @@
+opencollection: 1.0.0
+
+info:
+  name: ise--y2--b3--proj host
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+request:
+  variables:
+    - name: nginx
+      value: http://localhost:8080
+    - name: web-app
+      value: http://localhost:8082
+    - name: collector
+      value: http://localhost:8081
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git

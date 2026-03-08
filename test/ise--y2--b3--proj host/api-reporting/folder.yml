@@ -1,0 +1,10 @@
+info:
+  name: /api/reporting
+  type: folder
+  seq: 1
+
+request:
+  headers:
+    - name: web-app
+      value: http://localhost:8082
+  auth: inherit
