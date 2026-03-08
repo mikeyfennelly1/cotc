@@ -3,15 +3,6 @@
 :toclevels: 3
 
 == Overview
-
-=== GitHub Repo Structure
-
-The repository submodules are reflective of the architecture shown in the diagram below. The submodules are as follows:
-
-* link:https://github.com/mikeyfennelly1/ise--y2--b3--project--collector[Collector Agent]: The `ise--y2--b3--project--collector` submodule corresponds to the `Collector Agent` in the diagram.
-* link:https://github.com/mikeyfennelly1/ise--y2--b3--project--desktop-sysinfo[Device 1]: The `ise--y2--b3--project--desktop-sysinfo` submodule corresponds to `Device 1` in the diagram.
-* link:https://github.com/mikeyfennelly1/ise--y2--b3--project--mobile-app[Mobile Data (Firebase)]: The `ise--y2--b3--project--mobile-app` submodule corresponds to `Mobile Data (Firebase)` in the diagram. Although the `Mobile Data (Firebase)` labelling in the provided reference architecture does not include the mobile app, the provided and corresponding `mobile-app` submodule accounts for both the android source code for the mobile app and any firebase related scripts/configurations.
-
 === Architecture
 
 image::img/arch.png[System-wide architecture diagram]
