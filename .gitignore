@@ -1,4 +1,6 @@
 /.vscode
+/logs
 /.idea
 .env
 nginx-local.conf
+.env.local
