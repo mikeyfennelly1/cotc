@@ -18,6 +18,19 @@ tasks:
       - cd ise--y2--b3--project--web-app && ./gradlew build --no-daemon && cp build/libs/ise--y2--b3--project--web-app-0.0.1-SNAPSHOT.jar app.jar
     silent: false
 
+  deploy:latest:
+    desc: Deploy the latest configuration for the application.
+    cmds:
+      - ansible-playbook ansible/deploy.yml -i ansible/inventory.ini
+    silent: false
+
+  deploy:latest:verbose:
+    desc: Deploy the latest configuration for the application in verbose mode.
+    cmds:
+      - ansible-playbook ansible/deploy.yml -i ansible/inventory.ini -vvv
+    silent: false
+
+
   nginx:
     desc: Start nginx
     cmds:
