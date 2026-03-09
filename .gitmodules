@@ -10,6 +10,9 @@
 [submodule "ise--y2--b3--project--web-gui"]
 	path = ise--y2--b3--project--web-gui
 	url = git@github.com:mikeyfennelly1/ise--y2--b3--project--web-gui.git
+[submodule "ise--y2--b3--project--cli"]
+	path = ise--y2--b3--project--web-gui
+	url = git@github.com:mikeyfennelly1/ise--y2--b3--project--cli.git
 [submodule "ise--y2--b3--project--android-app"]
 	path = ise--y2--b3--project--android-app
 	url = git@github.com:Nathan2589/ise--y2--b3--project--android-app.git
