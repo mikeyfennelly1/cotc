@@ -16,6 +16,24 @@
     - vars/secrets.yml
 
   tasks:
+    - name: Forward port 5030 to 8080
+      ansible.builtin.command: >
+        iptables -t nat -A PREROUTING -p tcp --dport 5030 -j REDIRECT --to-port 8080
+      become: true
+
+    - name: Ensure iptables directory exists
+      ansible.builtin.file:
+        path: /etc/iptables
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      become: true
+
+    - name: Save iptables rules
+      ansible.builtin.shell: iptables-save > /etc/iptables/rules.v4
+      become: true
+
     - name: Remove conflicting containerd.io
       apt:
         name: containerd.io
