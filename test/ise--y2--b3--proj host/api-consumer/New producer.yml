@@ -1,0 +1,18 @@
+info:
+  name: New producer
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{web-app}}/api/consumer/producers"
+  body:
+    type: json
+    data: '{"name": "sysinfo-producer--1", "streamName": "test"}'
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

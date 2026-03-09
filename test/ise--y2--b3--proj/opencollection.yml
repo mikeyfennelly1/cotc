@@ -17,7 +17,7 @@ config:
 request:
   variables:
     - name: nginx
-      value: http://localhost:8080
+      value: http://200.69.13.70:5030
 bundled: false
 extensions:
   bruno:
