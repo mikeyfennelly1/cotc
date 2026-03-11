@@ -21,7 +21,7 @@ This project utilizes Git submodules. To ensure all components are correctly ini
 
 [source,bash]
 ----
-git clone --recurse-submodules git@github.com:mikeyfennelly1/ise--y2--b3--project.git
+git clone --recurse-submodules git@github.com:mikeyfennelly1/cotc.git
 ----
 
 If you have already cloned the repository without `--recurse-submodules`, you can initialize them by running:
@@ -45,13 +45,13 @@ The root `./start.sh` orchestrates local development by delegating to each submo
 ----
 ./ (root)
 ├── start.sh                          # Starts NATS & Postgres, spawns tmux session
-├── ise--y2--b3--project--collector/
+├── cotccollector/
 │   └── start.sh                      # Checks NATS health, runs: ./gradlew bootRun
-├── ise--y2--b3--project--web-app/
+├── cotcsubscriber/
 │   └── start.sh                      # Waits for Postgres, runs: ./gradlew bootRun
-├── ise--y2--b3--project--web-gui/
+├── cotcgui/
 │   └── start.sh                      # Runs: npm run dev
-└── ise--y2--b3--project--desktop-sysinfo/
+└── cotccli/
     └── start.sh                      # Runs: go run main.go producer ...
 ----
 
@@ -81,11 +81,11 @@ Local env vars live in `.env.local` at the repo root and are sourced by each sub
 | Used as an API gateway, routing requests to collector and web-app.
 
 | Collector
-| Runs directly via link:https://github.com/mikeyfennelly1/ise--y2--b3--project--collector/blob/main/start.sh[`./start.sh`], which invokes `./gradlew bootRun` to run the JAR in-process.
+| Runs directly via link:https://github.com/mikeyfennelly1/cotccollector/blob/main/start.sh[`./start.sh`], which invokes `./gradlew bootRun` to run the JAR in-process.
 | Runs via Docker Compose, exposed through NGINX.
 
 | web-app
-| Runs directly via link:https://github.com/mikeyfennelly1/ise--y2--b3--project--web-app/blob/main/start.sh[`./start.sh`], which invokes `./gradlew bootRun` to run the JAR in-process.
+| Runs directly via link:https://github.com/mikeyfennelly1/cotcsubscriber/blob/main/start.sh[`./start.sh`], which invokes `./gradlew bootRun` to run the JAR in-process.
 | Runs via Docker Compose, exposed through NGINX.
 
 | NATS/Jetstream
