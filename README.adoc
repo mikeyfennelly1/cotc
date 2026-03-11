@@ -1,4 +1,4 @@
-= CoTC & Mobile Dev joint project
+= cotc
 :toc:
 :toclevels: 3
 
