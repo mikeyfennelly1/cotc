@@ -1,3 +1,5 @@
+/.gitignored
+/serviceAccount.json
 /.vscode
 /logs
 /.idea
