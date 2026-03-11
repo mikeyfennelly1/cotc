@@ -5,7 +5,7 @@
 == Overview
 === Architecture
 
-image::img/arch.png[System-wide architecture diagram]
+image::.img/arch.png[System-wide architecture diagram]
 
 The system is composed of the following applications:
 
