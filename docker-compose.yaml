@@ -7,7 +7,7 @@ services:
   nats:
     image: nats:2.12.3-alpine3.22
     container_name: uploader-queue
-    command: ["--port", "${NATS_PORT}", "--http_port", "8222"]
+    command: ["--port", "${NATS_PORT}", "--http_port", "8222", "--jetstream"]
     environment:
       - NATS_PORT=${NATS_PORT}
     healthcheck:
