@@ -1,7 +1,7 @@
 opencollection: 1.0.0
 
 info:
-  name: ise--y2--b3--proj host
+  name: cotc
 config:
   proxy:
     inherit: true
@@ -18,7 +18,7 @@ request:
   variables:
     - name: nginx
       value: http://localhost:8080
-    - name: web-app
+    - name: subscriber
       value: http://localhost:8082
     - name: collector
       value: http://localhost:8081

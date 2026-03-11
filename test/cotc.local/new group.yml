@@ -1,14 +1,14 @@
 info:
-  name: Get producer details
+  name: new group
   type: http
-  seq: 5
+  seq: 1
 
 http:
-  method: GET
-  url: "{{web-app}}/api/reporting/producers?name=sysinfo-reader--1"
+  method: POST
+  url: "{{subscriber}}/api/group?name=test"
   params:
     - name: name
-      value: sysinfo-reader--1
+      value: test
       type: query
   auth: inherit
 

@@ -1,7 +1,7 @@
 info:
-  name: producers
+  name: /api/group
   type: folder
-  seq: 5
+  seq: 3
 
 request:
   auth: inherit

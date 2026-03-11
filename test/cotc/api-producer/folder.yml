@@ -1,5 +1,5 @@
 info:
-  name: /api/collector
+  name: /api/producer
   type: folder
   seq: 2
 

@@ -1,14 +1,18 @@
 info:
-  name: New producer
+  name: new producer
   type: http
-  seq: 3
+  seq: 2
 
 http:
   method: POST
-  url: "{{web-app}}/api/consumer/producers"
+  url: "{{subscriber}}/api/producer"
   body:
     type: json
-    data: '{"name": "sysinfo-producer--1", "streamName": "test"}'
+    data: |-
+      {
+        "name": "test-producer",
+        "group": "test"
+      }
   auth: inherit
 
 settings:

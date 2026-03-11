@@ -1,7 +1,7 @@
 opencollection: 1.0.0
 
 info:
-  name: ise--y2--b3--proj
+  name: cotc
 config:
   proxy:
     inherit: true
