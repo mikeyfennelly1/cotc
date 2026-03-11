@@ -15,8 +15,6 @@ cd "${BASEDIR}"
 source "${BASEDIR}"/.env.local
 source "${BASEDIR}"/scripts/helpers.sh
 
-prefix="ise--y2--b3--project"
-
 ################################################
 # START NATS & POSTGRES
 ################################################
@@ -26,14 +24,14 @@ docker compose -f docker-compose.local.yaml up nats -d --wait
 echo "NATS is healthy"
 echo "starting Postgres"
 var_must_exist POSTGRES_PASSWORD POSTGRES_USER POSTGRES_DB POSTGRES_PORT
-docker compose -f docker-compose.local.yaml up db -d --wait
+docker compose -f docker-compose.local.yaml up cotcdb -d --wait
 echo "Postgres is healthy"
 
 ################################################
 # START SERVICE SESSIONS
 ################################################
 # Create a new tmux session (or attach if it already exists)
-SESSION_NAME="ise--y2--b3--project"
+SESSION_NAME="cotc"
 
 echo "starting TMUX sessions..."
 
@@ -47,22 +45,19 @@ tmux set-option -t "$SESSION_NAME" pane-border-format "#{?pane_active,#[bg=green
 
 start_service() {
   local pane="$SESSION_NAME":0.$1
-  local title="$2"
-  local dir="${BASEDIR}/${prefix}--$3"
-  tmux select-pane -t "$pane" -T "$title"
-  tmux send-keys -t "$pane" "pushd \"$dir\" && chmod +x ./start.sh && bash ./start.sh" C-m
+  local name="$2"
+  tmux select-pane -t "$pane" -T "$name"
+  tmux send-keys -t "$pane" "pushd \"$name\" && chmod +x ./start.sh && bash ./start.sh" C-m
 }
 
 tmux split-window -h -t "$SESSION_NAME":0
-start_service 1 "collector" "collector"
+start_service 1 "cotccollector"
 
 tmux split-window -v -t "$SESSION_NAME":0.1
-start_service 2 "web-app" "web-app"
+start_service 2 "cotcsubscriber"
 
 tmux split-window -v -t "$SESSION_NAME":0.2
-start_service 3 "web-gui" "web-gui"
-
-start_service 0 "sysinfo" "desktop-sysinfo"
+start_service 3 "cotcgui"
 
 # Optional: evenly size panes
 tmux select-layout -t "$SESSION_NAME":0 tiled
