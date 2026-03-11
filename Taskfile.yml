@@ -11,23 +11,16 @@ tasks:
       - ./ise--y2--b3--project--web-app/scripts/docker-build.sh
     silent: false
 
-  build:
-    desc: Build all services on the host and stage JARs for Docker
-    cmds:
-      - cd ise--y2--b3--project--collector && ./gradlew build --no-daemon && cp build/libs/b3proj-0.0.1-SNAPSHOT.jar app.jar
-      - cd ise--y2--b3--project--web-app && ./gradlew build --no-daemon && cp build/libs/ise--y2--b3--project--web-app-0.0.1-SNAPSHOT.jar app.jar
-    silent: false
-
   deploy:latest:
     desc: Deploy the latest configuration for the application.
     cmds:
-      - ansible-playbook ansible/deploy.yml -i ansible/inventory.ini --vault-password-file ./.vault_pass
+      - ansible-playbook .ansible/deploy.yml -i .ansible/inventory.ini --vault-password-file ./.vault_pass
     silent: false
 
   deploy:latest:verbose:
     desc: Deploy the latest configuration for the application in verbose mode.
     cmds:
-      - ansible-playbook ansible/deploy.yml -i ansible/inventory.ini -vvv --vault-password-file ./.vault_pass
+      - ansible-playbook .ansible/deploy.yml -i .ansible/inventory.ini -vvv --vault-password-file ./.vault_pass
     silent: false
 
 
