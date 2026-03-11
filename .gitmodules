@@ -7,6 +7,9 @@
 [submodule "gui"]
 	path = cotcgui
 	url = git@github.com:mikeyfennelly1/cotcgui.git
+[submodule "libcotc"]
+	path = libcotc
+	url = git@github.com:mikeyfennelly1/libcotc.git
 [submodule "cli"]
 	path = cotccli
 	url = git@github.com:mikeyfennelly1/cotccli.git
