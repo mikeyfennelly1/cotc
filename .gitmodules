@@ -1,18 +1,15 @@
-[submodule "ise--y2--b3--project--collector"]
+[submodule "collector"]
 	path = ise--y2--b3--project--collector
-	url = git@github.com:mikeyfennelly1/ise--y2--b3--project--collector.git
-[submodule "ise--y2--b3--project--mobile-app"]
-	path = ise--y2--b3--project--mobile-app
-	url = git@github.com:mikeyfennelly1/ise--y2--b3--project--mobile-app.git
-[submodule "ise--y2--b3--project--web-app"]
-	path = ise--y2--b3--project--web-app
-	url = git@github.com:mikeyfennelly1/ise--y2--b3--project--web-app.git
-[submodule "ise--y2--b3--project--web-gui"]
-	path = ise--y2--b3--project--web-gui
-	url = git@github.com:mikeyfennelly1/ise--y2--b3--project--web-gui.git
-[submodule "ise--y2--b3--project--cli"]
-	path = ise--y2--b3--project--web-gui
-	url = git@github.com:mikeyfennelly1/ise--y2--b3--project--cli.git
+	url = git@github.com:mikeyfennelly1/cotccollector.git
+[submodule "subscriber"]
+	path = cotcsubscriber
+	url = git@github.com:mikeyfennelly1/cotcsubscriber.git
+[submodule "gui"]
+	path = cotcgui
+	url = git@github.com:mikeyfennelly1/cotcgui.git
+[submodule "cli"]
+	path = cotccli
+	url = git@github.com:mikeyfennelly1/cotccli.git
 [submodule "ise--y2--b3--project--android-app"]
 	path = ise--y2--b3--project--android-app
 	url = git@github.com:Nathan2589/ise--y2--b3--project--android-app.git
