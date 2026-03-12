@@ -1,5 +1,5 @@
 app_name: ise--y2--b3--project
-repo_ssh_url: git@github.com:mikeyfennelly1/ise--y2--b3--project.git
+repo_ssh_url: git@github.com:mikeyfennelly1/cotc.git
 gh_pull_key_file: /home/mfennelly/.ssh/ansible_github_pull_key
 repo_pull_dest: /srv/app
 # api-gateway
