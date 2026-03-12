@@ -33,8 +33,8 @@ services:
     networks:
       - data
 
-  collector:
-    image: mikeyfennelly/ise-y2-b3-project-collector:latest
+  cotccollector:
+    image: mikeyfennelly/cotccollector:latest
     environment:
       NATS_HOST: nats
       NATS_PORT: "${NATS_PORT}"
@@ -47,8 +47,8 @@ services:
     networks:
       - messaging
 
-  web-app:
-    image: mikeyfennelly/ise-y2-b3-project-web-app:latest
+  cotcsubscriber:
+    image: mikeyfennelly/cotcsubscriber:latest
     depends_on:
       db:
         condition: service_healthy
@@ -63,6 +63,7 @@ services:
       WEB_APP_PORT: 8080
       NATS_HOST: nats
       NATS_PORT: "${NATS_PORT}"
+      GOOGLE_APPLICATION_CREDENTIALS: "/app/serviceAccount.json"
     ports:
       - "${WEB_APP_PORT}:8080"
     networks:
@@ -73,10 +74,10 @@ services:
   api-gateway:
     image: nginx:1.28-alpine3.23
     volumes:
-      - ./nginx.docker.conf:/etc/nginx/templates/default.conf.template
+      - ./.nginx/nginx.docker.conf:/etc/nginx/templates/default.conf.template
     depends_on:
-      - web-app
-      - collector
+      - cotcsubscriber
+      - cotccollector
     environment:
       # Restrict substitution to only these vars so nginx's own $host, $remote_addr, etc. are left intact
       NGINX_ENVSUBST_TEMPLATE_VARS: "NGINX_PORT NGINX_SERVER_NAME"

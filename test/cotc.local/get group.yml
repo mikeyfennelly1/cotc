@@ -5,11 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{subscriber}}/api/group?name=test"
-  params:
-    - name: name
-      value: test
-      type: query
+  url: "{{subscriber}}/api/group"
   auth: inherit
 
 settings:

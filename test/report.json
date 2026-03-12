@@ -1,0 +1,168 @@
+{
+  "timestamp": "2026-03-12T10:33:20.886Z",
+  "duration": 687,
+  "summary": {
+    "total": 26,
+    "passed": 19,
+    "failed": 7
+  },
+  "suites": [
+    {
+      "name": "Group API",
+      "tests": [
+        {
+          "name": "GET /api/group/health returns 200",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "GET /api/group returns array",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "GET /api/group/fqd returns array of names",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "POST /api/group creates group",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "POST /api/group duplicate returns 409",
+          "status": "fail",
+          "duration": 0,
+          "error": "expected 409, got 500: Internal Server Error\n\n500 !== 409\n"
+        },
+        {
+          "name": "GET /api/group?name= returns group",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "GET /api/group?name= nonexistent returns 404",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "POST /api/group creates child group",
+          "status": "fail",
+          "duration": 0,
+          "error": "expected 201, got ?: Group does not exist: test-group\n\n404 !== 201\n"
+        },
+        {
+          "name": "GET /api/group/children returns child list",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "GET /api/group/children nonexistent group returns 404",
+          "status": "pass",
+          "duration": 0
+        }
+      ]
+    },
+    {
+      "name": "Producer API",
+      "tests": [
+        {
+          "name": "GET /api/producer returns array",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "POST /api/producer creates producer",
+          "status": "fail",
+          "duration": 0,
+          "error": "expected 201, got ?: Group does not exist: test-group\n\n404 !== 201\n"
+        },
+        {
+          "name": "POST /api/producer duplicate returns 409",
+          "status": "fail",
+          "duration": 0,
+          "error": "expected 409, got ?: Group does not exist: test-group\n\n404 !== 409\n"
+        },
+        {
+          "name": "POST /api/producer unknown group returns 404",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "GET /api/producer?name= returns producer",
+          "status": "fail",
+          "duration": 0,
+          "error": "expected 200, got ?: null\n\n404 !== 200\n"
+        },
+        {
+          "name": "GET /api/producer?name= nonexistent returns 404",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "GET /api/producer/:groupName returns producers for group",
+          "status": "pass",
+          "duration": 0
+        }
+      ]
+    },
+    {
+      "name": "Device Command API",
+      "tests": [
+        {
+          "name": "POST /api/consumer/commands/ empty body returns 400",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "POST /api/consumer/commands/ missing command returns 400",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "POST /api/consumer/commands/ missing device_id returns 400",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "POST /api/consumer/commands/ valid body returns 201",
+          "status": "pass",
+          "duration": 0
+        }
+      ]
+    },
+    {
+      "name": "Cleanup",
+      "tests": [
+        {
+          "name": "DELETE /api/producer?name=test-producer returns 204",
+          "status": "fail",
+          "duration": 0,
+          "error": "expected 204, got ?: Producer 'test-producer' not found.\n\n404 !== 204\n"
+        },
+        {
+          "name": "DELETE /api/producer nonexistent returns 404",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "DELETE /api/group?name=test-group.test-child returns 204",
+          "status": "fail",
+          "duration": 0,
+          "error": "expected 204, got ?: Group does not exist: test-group.test-child\n\n404 !== 204\n"
+        },
+        {
+          "name": "DELETE /api/group?name=test-group returns 204",
+          "status": "pass",
+          "duration": 0
+        },
+        {
+          "name": "DELETE /api/group nonexistent returns 404",
+          "status": "pass",
+          "duration": 0
+        }
+      ]
+    }
+  ]
+}
