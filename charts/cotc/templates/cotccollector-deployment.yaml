@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cotc.fullname" . }}-cotccollector
+  labels:
+    {{- include "cotc.labels" . | nindent 4 }}
+    {{- include "cotc.selectorLabels" (dict "root" . "component" "cotccollector") | nindent 4 }}
+spec:
+  replicas: {{ .Values.cotccollector.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "cotc.selectorLabels" (dict "root" . "component" "cotccollector") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "cotc.selectorLabels" (dict "root" . "component" "cotccollector") | nindent 8 }}
+    spec:
+      containers:
+        - name: cotccollector
+          image: "{{ .Values.cotccollector.image.repository }}:{{ .Values.cotccollector.image.tag }}"
+          imagePullPolicy: {{ .Values.cotccollector.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.cotccollector.port }}
+          env:
+            - name: NATS_HOST
+              value: {{ include "cotc.natsServiceName" . }}
+            - name: NATS_PORT
+              value: {{ .Values.nats.port | quote }}
+            - name: COLLECTOR_LISTEN_PORT
+              value: {{ .Values.cotccollector.port | quote }}
+            - name: COLLECTOR_LOG_LEVEL
+              value: {{ .Values.cotccollector.logLevel | quote }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 40
+            periodSeconds: 15
+          resources:
+            {{- toYaml .Values.cotccollector.resources | nindent 12 }}

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cotc.dbServiceName" . }}
+  labels:
+    {{- include "cotc.labels" . | nindent 4 }}
+    {{- include "cotc.selectorLabels" (dict "root" . "component" "db") | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "cotc.selectorLabels" (dict "root" . "component" "db") | nindent 4 }}
+  ports:
+    - name: postgres
+      port: {{ .Values.postgres.port }}
+      targetPort: postgres

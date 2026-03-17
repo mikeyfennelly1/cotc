@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cotc.fullname" . }}-nats
+  labels:
+    {{- include "cotc.labels" . | nindent 4 }}
+    {{- include "cotc.selectorLabels" (dict "root" . "component" "nats") | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "cotc.selectorLabels" (dict "root" . "component" "nats") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "cotc.selectorLabels" (dict "root" . "component" "nats") | nindent 8 }}
+    spec:
+      containers:
+        - name: nats
+          image: "{{ .Values.nats.image.repository }}:{{ .Values.nats.image.tag }}"
+          imagePullPolicy: {{ .Values.nats.image.pullPolicy }}
+          args:
+            - "--port"
+            - {{ .Values.nats.port | quote }}
+            - "--http_port"
+            - {{ .Values.nats.monitoringPort | quote }}
+            - "--jetstream"
+          ports:
+            - name: client
+              containerPort: {{ .Values.nats.port }}
+            - name: monitoring
+              containerPort: {{ .Values.nats.monitoringPort }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: monitoring
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: monitoring
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.nats.resources | nindent 12 }}

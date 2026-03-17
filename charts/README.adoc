@@ -1,0 +1,133 @@
+= cotc Helm Chart
+
+Helm chart for deploying the *Cloud of Things Collector* stack to Kubernetes.
+
+== Services
+
+[cols="1,2,2", options="header"]
+|===
+| Component | Image | Purpose
+
+| `nats`
+| `nats:2.12.3-alpine3.22`
+| NATS JetStream message broker
+
+| `db`
+| `postgres:17-alpine`
+| PostgreSQL database
+
+| `cotccollector`
+| `mikeyfennelly/cotccollector`
+| Spring Boot data collection service
+
+| `cotcsubscriber`
+| `mikeyfennelly/cotcsubscriber`
+| Spring Boot consumer/API service
+
+| `cotcgui`
+| `mikeyfennelly/cotcgui`
+| Next.js frontend
+
+| `api-gateway`
+| `nginx:1.28-alpine3.23`
+| Nginx reverse proxy (external entry point)
+|===
+
+== Prerequisites
+
+* Kubernetes 1.24+
+* Helm 3.x
+* A `LoadBalancer`-capable cluster (or use `NodePort` — see below)
+
+== Installation
+
+=== Minimal install (no Google credentials)
+
+[source,bash]
+----
+helm install cotc ./cotc \
+  --set postgres.password=<yourpassword> \
+  --set cotcgui.apiBaseUrl=http://<external-ip>:8080
+----
+
+=== Full install (with Google service account)
+
+[source,bash]
+----
+helm install cotc ./cotc \
+  --set postgres.password=<yourpassword> \
+  --set cotcsubscriber.googleServiceAccountJson=$(base64 -w0 /path/to/serviceAccount.json) \
+  --set cotcgui.apiBaseUrl=http://<external-ip>:8080
+----
+
+=== NodePort instead of LoadBalancer
+
+[source,bash]
+----
+helm install cotc ./cotc \
+  --set apiGateway.service.type=NodePort \
+  --set apiGateway.service.nodePort=30080 \
+  --set postgres.password=<yourpassword>
+----
+
+== Key Values
+
+[cols="2,1,3", options="header"]
+|===
+| Value | Default | Description
+
+| `postgres.password`
+| `changeme`
+| PostgreSQL password — *always override*
+
+| `postgres.database`
+| `web-app`
+| PostgreSQL database name
+
+| `postgres.user`
+| `mikey`
+| PostgreSQL username
+
+| `postgres.storage`
+| `5Gi`
+| PVC size for Postgres data
+
+| `postgres.storageClassName`
+| `""`
+| StorageClass (empty = cluster default)
+
+| `cotcsubscriber.googleServiceAccountJson`
+| `""`
+| Base64-encoded Google SA JSON
+
+| `cotcgui.apiBaseUrl`
+| `http://localhost:8080`
+| Public URL the browser uses to reach the API
+
+| `apiGateway.service.type`
+| `LoadBalancer`
+| Service type for the nginx gateway
+
+| `apiGateway.service.nodePort`
+| `""`
+| NodePort number (only used when type=NodePort)
+|===
+
+See link:cotc/values.yaml[cotc/values.yaml] for the full list.
+
+== Upgrading
+
+[source,bash]
+----
+helm upgrade cotc ./cotc --reuse-values --set postgres.password=<yourpassword>
+----
+
+== Uninstalling
+
+[source,bash]
+----
+helm uninstall cotc
+----
+
+NOTE: The Postgres PersistentVolumeClaim is *not* deleted automatically. +
+To remove it: `kubectl delete pvc cotc-db-pvc`

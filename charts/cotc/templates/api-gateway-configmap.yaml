@@ -1,0 +1,115 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cotc.fullname" . }}-nginx-conf
+  labels:
+    {{- include "cotc.labels" . | nindent 4 }}
+data:
+  default.conf: |
+    server {
+        listen {{ .Values.apiGateway.port }};
+        server_name api-gateway;
+
+        proxy_buffering off;
+
+        # ── Collector Swagger docs ──────────────────────────────────────────────
+        location = /api/collector/docs {
+            return 302 /api/collector/swagger-ui/index.html;
+        }
+
+        location ~ ^/api/collector/(swagger-ui|v3|webjars) {
+            rewrite ^/api/collector/(.*)$ /$1 break;
+            proxy_pass http://{{ include "cotc.collectorServiceName" . }}:{{ .Values.cotccollector.port }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 60s;
+            proxy_read_timeout 60s;
+        }
+
+        location ~ ^/v3/ {
+            proxy_pass http://{{ include "cotc.collectorServiceName" . }}:{{ .Values.cotccollector.port }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 60s;
+            proxy_read_timeout 60s;
+        }
+
+        # ── Web-app Swagger docs ────────────────────────────────────────────────
+        location = /api/web-app/docs {
+            return 302 /api/web-app/swagger-ui/index.html;
+        }
+
+        location ~ ^/api/web-app/(swagger-ui|webjars) {
+            rewrite ^/api/web-app/(.*)$ /$1 break;
+            proxy_pass http://{{ include "cotc.subscriberServiceName" . }}:{{ .Values.cotcsubscriber.port }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 60s;
+            proxy_read_timeout 60s;
+        }
+
+        location ~ ^/api-docs {
+            proxy_pass http://{{ include "cotc.subscriberServiceName" . }}:{{ .Values.cotcsubscriber.port }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 60s;
+            proxy_read_timeout 60s;
+        }
+
+        # ── API routes ──────────────────────────────────────────────────────────
+        location ~ ^/api/group(/.*)?$ {
+            proxy_pass http://{{ include "cotc.subscriberServiceName" . }}:{{ .Values.cotcsubscriber.port }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 60s;
+            proxy_read_timeout 60s;
+        }
+
+        location ~ ^/api/consumer(/.*)?$ {
+            proxy_pass http://{{ include "cotc.subscriberServiceName" . }}:{{ .Values.cotcsubscriber.port }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 60s;
+            proxy_read_timeout 60s;
+        }
+
+        location ~ ^/api/device(/.*)?$ {
+            proxy_pass http://{{ include "cotc.subscriberServiceName" . }}:{{ .Values.cotcsubscriber.port }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 60s;
+            proxy_read_timeout 60s;
+        }
+
+        location ~ ^/api/collector(/.*)?$ {
+            proxy_pass http://{{ include "cotc.collectorServiceName" . }}:{{ .Values.cotccollector.port }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 60s;
+            proxy_read_timeout 60s;
+        }
+    }

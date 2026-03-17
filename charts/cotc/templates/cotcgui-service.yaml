@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cotc.guiServiceName" . }}
+  labels:
+    {{- include "cotc.labels" . | nindent 4 }}
+    {{- include "cotc.selectorLabels" (dict "root" . "component" "cotcgui") | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "cotc.selectorLabels" (dict "root" . "component" "cotcgui") | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.cotcgui.port }}
+      targetPort: http

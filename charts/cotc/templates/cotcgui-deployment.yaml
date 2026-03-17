@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cotc.fullname" . }}-cotcgui
+  labels:
+    {{- include "cotc.labels" . | nindent 4 }}
+    {{- include "cotc.selectorLabels" (dict "root" . "component" "cotcgui") | nindent 4 }}
+spec:
+  replicas: {{ .Values.cotcgui.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "cotc.selectorLabels" (dict "root" . "component" "cotcgui") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "cotc.selectorLabels" (dict "root" . "component" "cotcgui") | nindent 8 }}
+    spec:
+      containers:
+        - name: cotcgui
+          image: "{{ .Values.cotcgui.image.repository }}:{{ .Values.cotcgui.image.tag }}"
+          imagePullPolicy: {{ .Values.cotcgui.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.cotcgui.port }}
+          env:
+            - name: NEXT_PUBLIC_API_BASE_URL
+              value: {{ .Values.cotcgui.apiBaseUrl | quote }}
+            - name: API_BASE_URL
+              value: {{ .Values.cotcgui.apiBaseUrl | quote }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          resources:
+            {{- toYaml .Values.cotcgui.resources | nindent 12 }}

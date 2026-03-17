@@ -1,0 +1,76 @@
+nameOverride: ""
+fullnameOverride: ""
+
+# ── NATS ──────────────────────────────────────────────────────────────────────
+nats:
+  image:
+    repository: nats
+    tag: "2.12.3-alpine3.22"
+    pullPolicy: IfNotPresent
+  port: 4222
+  monitoringPort: 8222
+  resources: {}
+
+# ── PostgreSQL ────────────────────────────────────────────────────────────────
+postgres:
+  image:
+    repository: postgres
+    tag: "17-alpine"
+    pullPolicy: IfNotPresent
+  port: 5432
+  database: "web-app"
+  user: "mikey"
+  # Override with --set postgres.password=<value> or an external secret
+  password: "changeme"
+  storage: "5Gi"
+  storageClassName: ""
+  resources: {}
+
+# ── cotccollector ─────────────────────────────────────────────────────────────
+cotccollector:
+  image:
+    repository: mikeyfennelly/cotccollector
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  port: 8080
+  logLevel: "INFO"
+  replicaCount: 1
+  resources: {}
+
+# ── cotcsubscriber ────────────────────────────────────────────────────────────
+cotcsubscriber:
+  image:
+    repository: mikeyfennelly/cotcsubscriber
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  port: 8080
+  replicaCount: 1
+  # Base64-encoded Google service account JSON.
+  # Supply at install time:  --set cotcsubscriber.googleServiceAccountJson=$(base64 -w0 serviceAccount.json)
+  googleServiceAccountJson: ""
+  resources: {}
+
+# ── cotcgui ───────────────────────────────────────────────────────────────────
+cotcgui:
+  image:
+    repository: mikeyfennelly/cotcgui
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  port: 8080
+  replicaCount: 1
+  # Public URL the browser uses to reach the API gateway
+  apiBaseUrl: "http://localhost:8080"
+  resources: {}
+
+# ── api-gateway (nginx) ───────────────────────────────────────────────────────
+apiGateway:
+  image:
+    repository: nginx
+    tag: "1.28-alpine3.23"
+    pullPolicy: IfNotPresent
+  port: 8080
+  replicaCount: 1
+  service:
+    type: LoadBalancer
+    # nodePort: 30080   # uncomment when type=NodePort
+  resources: {}

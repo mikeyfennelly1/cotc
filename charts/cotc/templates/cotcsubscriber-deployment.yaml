@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cotc.fullname" . }}-cotcsubscriber
+  labels:
+    {{- include "cotc.labels" . | nindent 4 }}
+    {{- include "cotc.selectorLabels" (dict "root" . "component" "cotcsubscriber") | nindent 4 }}
+spec:
+  replicas: {{ .Values.cotcsubscriber.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "cotc.selectorLabels" (dict "root" . "component" "cotcsubscriber") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "cotc.selectorLabels" (dict "root" . "component" "cotcsubscriber") | nindent 8 }}
+    spec:
+      containers:
+        - name: cotcsubscriber
+          image: "{{ .Values.cotcsubscriber.image.repository }}:{{ .Values.cotcsubscriber.image.tag }}"
+          imagePullPolicy: {{ .Values.cotcsubscriber.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.cotcsubscriber.port }}
+          env:
+            - name: NATS_HOST
+              value: {{ include "cotc.natsServiceName" . }}
+            - name: NATS_PORT
+              value: {{ .Values.nats.port | quote }}
+            - name: POSTGRES_HOST
+              value: {{ include "cotc.dbServiceName" . }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.postgres.port | quote }}
+            - name: WEB_APP_PORT
+              value: {{ .Values.cotcsubscriber.port | quote }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/app/serviceAccount.json"
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "cotc.fullname" . }}-db-secret
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "cotc.fullname" . }}-db-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "cotc.fullname" . }}-db-secret
+                  key: POSTGRES_PASSWORD
+          {{- if .Values.cotcsubscriber.googleServiceAccountJson }}
+          volumeMounts:
+            - name: google-sa
+              mountPath: /app/serviceAccount.json
+              subPath: serviceAccount.json
+              readOnly: true
+          {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 25
+            periodSeconds: 10
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 45
+            periodSeconds: 15
+          resources:
+            {{- toYaml .Values.cotcsubscriber.resources | nindent 12 }}
+      {{- if .Values.cotcsubscriber.googleServiceAccountJson }}
+      volumes:
+        - name: google-sa
+          secret:
+            secretName: {{ include "cotc.fullname" . }}-google-sa
+      {{- end }}
