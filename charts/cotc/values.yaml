@@ -57,6 +57,17 @@ cotcgui:
   apiBaseUrl: "http://localhost:8080"
   resources: {}
 
+keda:
+  enabled: false
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  # Number of pending JetStream messages per replica that triggers a scale-up.
+  lagThreshold: "100"
+  # Backlog must exceed this before scaling away from zero (only relevant when minReplicaCount: 0).
+  activationLagThreshold: "1"
+  pollingInterval: 15   # seconds
+  cooldownPeriod: 60    # seconds
+
 apiGateway:
   image:
     repository: nginx
