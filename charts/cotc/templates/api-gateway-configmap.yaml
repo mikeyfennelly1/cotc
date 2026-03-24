@@ -68,6 +68,13 @@ data:
             proxy_read_timeout 60s;
         }
 
+        # ── Health check ────────────────────────────────────────────────────────
+        location = /healthz {
+            access_log off;
+            return 200 "ok\n";
+            add_header Content-Type text/plain;
+        }
+
         # ── API routes ──────────────────────────────────────────────────────────
         location ~ ^/api/group(/.*)?$ {
             proxy_pass http://{{ include "cotc.subscriberServiceName" . }}:{{ .Values.cotcsubscriber.port }};
