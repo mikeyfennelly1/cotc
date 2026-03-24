@@ -1,0 +1,117 @@
+= Minikube Setup Guide
+:toc:
+:toc-placement: preamble
+
+Notes on deploying the cotc Helm chart locally with minikube.
+
+== Prerequisites
+
+* https://minikube.sigs.k8s.io/docs/start/[minikube] installed and running
+* https://helm.sh/docs/intro/install/[Helm] installed
+* `kubectl` configured to use the minikube context
+
+== Getting the minikube IP
+
+The minikube cluster runs inside a VM or container with its own internal IP.
+All traffic to the cluster must go through this IP.
+
+[source,bash]
+----
+minikube ip
+# e.g. 192.168.49.2
+----
+
+== Enabling the Ingress Addon
+
+minikube does not enable the nginx ingress controller by default.
+Without it, `Ingress` resources are created but no process listens on port 80 to serve them.
+
+[source,bash]
+----
+minikube addons enable ingress
+----
+
+Verify the controller pod is running:
+
+[source,bash]
+----
+kubectl get pods -n ingress-nginx
+----
+
+== Configuring /etc/hosts
+
+Kubernetes Ingress routes traffic based on the `Host` header.
+For local development, map your chosen hostname to the minikube IP in `/etc/hosts`.
+
+The `scripts/add-hosts-entry.sh` script does this automatically:
+
+[source,bash]
+----
+./scripts/add-hosts-entry.sh
+----
+
+Or manually:
+
+[source,bash]
+----
+echo "$(minikube ip)  api.cotc.local" | sudo tee -a /etc/hosts
+----
+
+== Installing the Chart with Ingress Enabled
+
+The ingress is disabled by default in `values.yaml`.
+Enable it at install/upgrade time:
+
+[source,bash]
+----
+helm upgrade --install cotc ./charts/cotc \
+  --set apiGateway.ingress.enabled=true \
+  --set apiGateway.ingress.host=api.cotc.local \
+  --set apiGateway.ingress.className=nginx
+----
+
+Verify the ingress has been assigned an address (the minikube IP):
+
+[source,bash]
+----
+kubectl get ingress
+----
+
+Expected output:
+
+----
+NAME               CLASS   HOSTS            ADDRESS        PORTS   AGE
+cotc-api-gateway   nginx   api.cotc.local   192.168.49.2   80      1m
+----
+
+== Updating the nginx ConfigMap
+
+The nginx proxy configuration lives in `charts/cotc/templates/api-gateway-configmap.yaml`.
+After editing it, upgrade the chart to apply the changes:
+
+[source,bash]
+----
+helm upgrade cotc ./charts/cotc \
+  --set apiGateway.ingress.enabled=true \
+  --set apiGateway.ingress.host=api.cotc.local \
+  --set apiGateway.ingress.className=nginx
+----
+
+The new ConfigMap is applied immediately, but nginx needs to reload its config.
+Force a pod restart to pick it up:
+
+[source,bash]
+----
+kubectl rollout restart deployment cotc-api-gateway
+----
+
+== Verifying
+
+[source,bash]
+----
+curl http://api.cotc.local/healthz
+# ok
+
+curl http://api.cotc.local/api/group/health
+# {"msg":"groups API is healthy"}
+----
