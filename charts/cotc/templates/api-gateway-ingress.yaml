@@ -1,0 +1,27 @@
+{{- if .Values.apiGateway.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "cotc.fullname" . }}-api-gateway
+  labels:
+    {{- include "cotc.labels" . | nindent 4 }}
+  {{- with .Values.apiGateway.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.apiGateway.ingress.className }}
+  ingressClassName: {{ .Values.apiGateway.ingress.className }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.apiGateway.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "cotc.gatewayServiceName" . }}
+                port:
+                  number: {{ .Values.apiGateway.port }}
+{{- end }}
