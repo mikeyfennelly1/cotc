@@ -1,0 +1,21 @@
+#!/bin/bash
+# pre-push hook:
+#   When pushing to main, also pushes the associated version tag to the remote.
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+[ "$BRANCH" = "main" ] || exit 0
+
+REMOTE="$1"
+
+while read local_ref local_sha remote_ref remote_sha; do
+    if echo "$remote_ref" | grep -q "refs/heads/main"; then
+        VERSION=$(cat VERSION 2>/dev/null | tr -d '[:space:]')
+        [ -n "$VERSION" ] || continue
+
+        TAG="v$VERSION"
+        if git tag --list | grep -qx "$TAG"; then
+            echo "INFO: Pushing tag $TAG to $REMOTE"
+            git push "$REMOTE" "$TAG"
+        fi
+    fi
+done

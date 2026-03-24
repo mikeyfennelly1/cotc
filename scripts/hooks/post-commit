@@ -1,0 +1,65 @@
+#!/bin/bash
+# post-commit hook:
+#   If .git/HOOK_DATA exists (written by commit-msg):
+#     - Updates VERSION and CHANGELOG
+#     - Amends the commit to include both files (--no-verify to prevent recursion)
+#     - The amend triggers post-commit again (without HOOK_DATA), which handles tagging
+#   Otherwise (amend's post-commit, or non-main commits):
+#     - Tags HEAD with the version in VERSION if not already tagged
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+[ "$BRANCH" = "main" ] || exit 0
+
+HOOK_DATA=".git/HOOK_DATA"
+
+if [ ! -f "$HOOK_DATA" ]; then
+    # Amend path: tag if not already tagged
+    VERSION=$(cat VERSION 2>/dev/null | tr -d '[:space:]')
+    [ -n "$VERSION" ] || exit 0
+    if ! git tag --list | grep -qx "v$VERSION"; then
+        git tag "v$VERSION"
+        echo "Tagged commit as v$VERSION"
+    fi
+    exit 0
+fi
+
+# Read and immediately delete to prevent re-entry on the amend's post-commit
+NEW_VERSION=$(grep "^NEW_VERSION=" "$HOOK_DATA" | cut -d= -f2)
+SECTION=$(grep "^SECTION=" "$HOOK_DATA" | cut -d= -f2)
+DESCRIPTION=$(grep "^DESCRIPTION=" "$HOOK_DATA" | cut -d= -f2-)
+rm -f "$HOOK_DATA"
+
+# ── Update VERSION ───────────────────────────────────────────────────────────
+VERSION=$(cat VERSION | tr -d '[:space:]')
+if [ "$NEW_VERSION" != "$VERSION" ]; then
+    echo "$NEW_VERSION" > VERSION
+    echo "INFO: Auto-bumped VERSION $VERSION → $NEW_VERSION"
+fi
+
+# ── Update CHANGELOG ─────────────────────────────────────────────────────────
+CHANGELOG="CHANGELOG.md"
+if [ -f "$CHANGELOG" ]; then
+    if ! awk '/^## \[Unreleased\]/{found=1} found && /^### '"$SECTION"'/{exit 1}' "$CHANGELOG"; then
+        : # section already exists
+    else
+        sed -i "/^## \[Unreleased\]/a \\\n### $SECTION" "$CHANGELOG"
+    fi
+
+    awk -v section="### $SECTION" -v entry="- $DESCRIPTION" '
+        /^## \[Unreleased\]/ { unreleased=1 }
+        unreleased && $0 == section {
+            print $0
+            print entry
+            unreleased=0
+            next
+        }
+        { print }
+    ' "$CHANGELOG" > "$CHANGELOG.tmp" && mv "$CHANGELOG.tmp" "$CHANGELOG"
+fi
+
+# ── Amend to include VERSION + CHANGELOG ─────────────────────────────────────
+# --no-verify prevents hooks from running again on the amend, which would
+# cause infinite recursion. The amend's own post-commit (above, no HOOK_DATA)
+# runs unconditionally and handles tagging.
+git add VERSION CHANGELOG.md
+git commit --amend --no-edit --no-verify

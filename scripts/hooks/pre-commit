@@ -1,0 +1,20 @@
+#!/bin/bash
+# pre-commit hook:
+#   On the main branch, validates that VERSION contains a valid semver.
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+[ "$BRANCH" = "main" ] || exit 0
+
+VERSION_FILE="VERSION"
+
+if [ ! -f "$VERSION_FILE" ]; then
+    echo "ERROR: VERSION file is required when committing to main."
+    exit 1
+fi
+
+VERSION=$(cat "$VERSION_FILE" | tr -d '[:space:]')
+
+if ! echo "$VERSION" | grep -qE "^[0-9]+\.[0-9]+\.[0-9]+$"; then
+    echo "ERROR: VERSION must be a valid semver (e.g. 1.2.3). Got: '$VERSION'"
+    exit 1
+fi
