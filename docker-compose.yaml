@@ -34,7 +34,7 @@ services:
       - data
 
   cotccollector:
-    image: mikeyfennelly/cotccollector:latest
+    image: mikeyfennelly/cotccollector:2.3.0
     environment:
       NATS_HOST: nats
       NATS_PORT: "${NATS_PORT}"
@@ -44,11 +44,16 @@ services:
     depends_on:
       nats:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - messaging
 
   cotcsubscriber:
-    image: mikeyfennelly/cotcsubscriber:latest
+    image: mikeyfennelly/cotcsubscriber:2.5.5
     depends_on:
       db:
         condition: service_healthy
@@ -66,10 +71,24 @@ services:
       GOOGLE_APPLICATION_CREDENTIALS: "/app/serviceAccount.json"
     ports:
       - "${WEB_APP_PORT}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - data
       - frontend
       - messaging
+
+  cotcgui:
+    image: mikeyfennelly/cotcgui:latest
+    environment:
+      GUI_PORT: "${GUI_PORT}"
+    ports:
+      - "${GUI_PORT}:8080"
+    networks:
+      - frontend
 
   api-gateway:
     image: nginx:1.28-alpine3.23
